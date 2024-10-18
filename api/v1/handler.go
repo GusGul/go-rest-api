@@ -1,11 +1,13 @@
 package v1
 
 import (
-    "net/http"
-    "go-gin-api/internal/db"
-    "github.com/gin-gonic/gin"
+	"encoding/json"
+	"go-gin-api/internal/db"
+	"net/http"
 )
 
-func GetAlbums(c *gin.Context) {
-    c.IndentedJSON(http.StatusOK, db.Albums)
+func GetAlbums(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(db.Albums)
 }

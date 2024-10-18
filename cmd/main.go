@@ -3,15 +3,19 @@ package main
 import (
 	v1 "go-gin-api/api/v1"
 	"go-gin-api/internal/db"
+	"net/http"
 
-	"github.com/gin-gonic/gin"
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 )
 
 func main() {
-	router := gin.Default()
-	router.GET("/albums", v1.GetAlbums)
+	router := chi.NewRouter()
+	router.Use(middleware.Logger)
+
+	router.Get("/albums", v1.GetAlbums)
 
 	db.LoadDatabase("db/database.json")
 
-	router.Run("localhost:8080")
+	http.ListenAndServe("localhost:8080", router)
 }
