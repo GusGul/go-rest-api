@@ -14,6 +14,7 @@ func main() {
 	router.Use(middleware.Logger)
 
 	router.Get("/albums", v1.GetAlbums)
+	router.Get("/albums/{id}", v1.GetAlbumById)
 
 	db.LoadDatabase("db/database.json")
 
