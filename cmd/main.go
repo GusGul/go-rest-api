@@ -1,8 +1,8 @@
 package main
 
 import (
-	v1 "go-gin-api/api/v1"
-	"go-gin-api/internal/db"
+	v1 "go-rest-api/api/v1"
+	"go-rest-api/internal/db"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -15,6 +15,7 @@ func main() {
 
 	router.Get("/albums", v1.GetAlbums)
 	router.Get("/albums/{id}", v1.GetAlbumById)
+	router.Post("/albums", v1.CreateAlbum)
 
 	db.LoadDatabase("db/database.json")
 

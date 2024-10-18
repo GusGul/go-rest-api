@@ -2,7 +2,8 @@ package v1
 
 import (
 	"encoding/json"
-	"go-gin-api/internal/db"
+	"go-rest-api/internal/db"
+	"go-rest-api/pkg/models"
 	"net/http"
 	"strconv"
 
@@ -33,4 +34,19 @@ func GetAlbumById(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.Error(w, "Album not found", http.StatusNotFound)
+}
+
+func CreateAlbum(w http.ResponseWriter, r *http.Request) {
+	var newAlbum models.Album
+	if err := json.NewDecoder(r.Body).Decode(&newAlbum); err != nil {
+		http.Error(w, "Invalid input", http.StatusBadRequest)
+		return
+	}
+
+	db.Albums = append(db.Albums, newAlbum)
+	db.SaveDatabase("db/database.json")
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(newAlbum)
 }
