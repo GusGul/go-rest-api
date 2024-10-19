@@ -16,6 +16,8 @@ func main() {
 	router.Get("/albums", v1.GetAlbums)
 	router.Get("/albums/{id}", v1.GetAlbumById)
 	router.Post("/albums", v1.CreateAlbum)
+	router.Put("/albums/{id}", v1.UpdateAlbum)
+	router.Delete("/albums/{id}", v1.DeleteAlbum)
 
 	db.LoadDatabase("db/database.json")
 

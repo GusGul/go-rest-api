@@ -10,7 +10,7 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-func GetAlbums(w http.ResponseWriter) {
+func GetAlbums(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	err := json.NewEncoder(w).Encode(db.Albums)
@@ -58,4 +58,56 @@ func CreateAlbum(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		return
 	}
+}
+
+func UpdateAlbum(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	idParam := chi.URLParam(r, "id")
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		http.Error(w, "Invalid album ID", http.StatusBadRequest)
+		return
+	}
+
+	var updatedAlbum models.Album
+	if err := json.NewDecoder(r.Body).Decode(&updatedAlbum); err != nil {
+		http.Error(w, "Invalid input", http.StatusBadRequest)
+		return
+	}
+
+	for i, album := range db.Albums {
+		if album.ID == id {
+			db.Albums[i] = updatedAlbum
+			db.SaveDatabase("db/database.json")
+			w.WriteHeader(http.StatusOK)
+			err := json.NewEncoder(w).Encode(updatedAlbum)
+			if err != nil {
+				return
+			}
+			return
+		}
+	}
+
+	http.Error(w, "Album not found", http.StatusNotFound)
+}
+
+func DeleteAlbum(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	idParam := chi.URLParam(r, "id")
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		http.Error(w, "Invalid album ID", http.StatusBadRequest)
+		return
+	}
+
+	for i, album := range db.Albums {
+		if album.ID == id {
+			db.Albums = append(db.Albums[:i], db.Albums[i+1:]...)
+			db.SaveDatabase("db/database.json")
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+	}
+
+	http.Error(w, "Album not found", http.StatusNotFound)
 }
