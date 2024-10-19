@@ -22,6 +22,7 @@ func main() {
 	router.Delete("/albums/{id}", v1.DeleteAlbum)
 
 	router.Get("/albums", v2.GetAlbums)
+	router.Get("/albums/{id}", v2.GetAlbumById)
 
 	db.LoadDatabase("db/database.json")
 	err := db.InitDatabase("gopher:Gopher@tcp(localhost:3306)/golang")

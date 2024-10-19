@@ -3,9 +3,12 @@ package v2
 import (
 	"database/sql"
 	"encoding/json"
+	"errors"
+	"github.com/go-chi/chi/v5"
 	"go-rest-api/internal/db"
 	"go-rest-api/pkg/models"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
@@ -44,7 +47,7 @@ func GetAlbums(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	defer rows.Close()
+	defer rows.Next()
 
 	var albums []models.Album
 	for rows.Next() {
@@ -57,6 +60,30 @@ func GetAlbums(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := json.NewEncoder(w).Encode(albums); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+}
+
+func GetAlbumById(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	idParam := chi.URLParam(r, "id")
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		http.Error(w, "Invalid album ID", http.StatusBadRequest)
+		return
+	}
+
+	var album models.Album
+	err = db.DB.QueryRow("SELECT al.id, al.title, ar.name AS artistName, al.price FROM albums al JOIN artists ar ON al.artistId = ar.id WHERE al.id = ?", id).Scan(&album.ID, &album.Title, &album.Artist, &album.Price)
+	if errors.Is(err, sql.ErrNoRows) {
+		http.Error(w, "Album not found", http.StatusNotFound)
+		return
+	} else if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if err := json.NewEncoder(w).Encode(album); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
