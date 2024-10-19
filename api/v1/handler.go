@@ -10,10 +10,13 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-func GetAlbums(w http.ResponseWriter, r *http.Request) {
+func GetAlbums(w http.ResponseWriter) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(db.Albums)
+	err := json.NewEncoder(w).Encode(db.Albums)
+	if err != nil {
+		return
+	}
 }
 
 func GetAlbumById(w http.ResponseWriter, r *http.Request) {
@@ -28,7 +31,10 @@ func GetAlbumById(w http.ResponseWriter, r *http.Request) {
 	for _, album := range db.Albums {
 		if album.ID == id {
 			w.WriteHeader(http.StatusOK)
-			json.NewEncoder(w).Encode(album)
+			err := json.NewEncoder(w).Encode(album)
+			if err != nil {
+				return
+			}
 			return
 		}
 	}
@@ -48,5 +54,8 @@ func CreateAlbum(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(newAlbum)
+	err := json.NewEncoder(w).Encode(newAlbum)
+	if err != nil {
+		return
+	}
 }
