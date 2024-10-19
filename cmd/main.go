@@ -3,6 +3,7 @@ package main
 import (
 	v1 "go-rest-api/api/v1"
 	"go-rest-api/internal/db"
+	"log"
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
@@ -20,8 +21,12 @@ func main() {
 	router.Delete("/albums/{id}", v1.DeleteAlbum)
 
 	db.LoadDatabase("db/database.json")
+	err := db.InitDatabase("gopher:Gopher@tcp(localhost:3306)/golang")
+	if err != nil {
+		log.Fatalf("Erro ao conectar ao banco de dados: %v", err)
+	}
 
-	err := http.ListenAndServe("localhost:8080", router)
+	err = http.ListenAndServe("localhost:8080", router)
 	if err != nil {
 		return
 	}
