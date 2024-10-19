@@ -19,5 +19,8 @@ func main() {
 
 	db.LoadDatabase("db/database.json")
 
-	http.ListenAndServe("localhost:8080", router)
+	err := http.ListenAndServe("localhost:8080", router)
+	if err != nil {
+		return
+	}
 }
