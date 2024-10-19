@@ -2,6 +2,7 @@ package main
 
 import (
 	v1 "go-rest-api/api/v1"
+	v2 "go-rest-api/api/v2"
 	"go-rest-api/internal/db"
 	"log"
 	"net/http"
@@ -14,7 +15,7 @@ func main() {
 	router := chi.NewRouter()
 	router.Use(middleware.Logger)
 
-	router.Get("/albums", v1.GetAlbums)
+	router.Get("/albums", v2.GetAlbums)
 	router.Get("/albums/{id}", v1.GetAlbumById)
 	router.Post("/albums", v1.CreateAlbum)
 	router.Put("/albums/{id}", v1.UpdateAlbum)
