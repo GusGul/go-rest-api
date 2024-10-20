@@ -1,0 +1,44 @@
+[
+  {
+    "id": 1,
+    "title": "Green Weeds",
+    "artist": "Gaspar Igas",
+    "genre": "Jazz",
+    "price": 56.99
+  },
+  {
+    "id": 2,
+    "title": "Gerudo Valley",
+    "artist": "KaDu",
+    "genre": "Classical",
+    "price": 17.99
+  },
+  {
+    "id": 3,
+    "title": "Little Boi",
+    "artist": "Wallatimu",
+    "genre": "Pop",
+    "price": 39.99
+  },
+  {
+    "id": 4,
+    "title": "Helicopter",
+    "artist": "Tithias",
+    "genre": "Rock",
+    "price": 199.99
+  },
+  {
+    "id": 5,
+    "title": "Gossip",
+    "artist": "DaniMeli",
+    "genre": "Pop",
+    "price": 89.9
+  },
+  {
+    "id": 6,
+    "title": "Whole Life Csharp",
+    "artist": "KaDu",
+    "genre": "Classical",
+    "price": 0.5
+  }
+]

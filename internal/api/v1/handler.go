@@ -6,9 +6,42 @@ import (
 	"go-rest-api/pkg/models"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/go-chi/chi/v5"
 )
+
+func GetAlbumsAverageByGenre(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	genreParam := chi.URLParam(r, "genre")
+	if genreParam == "" {
+		http.Error(w, "Invalid genre", http.StatusBadRequest)
+		return
+	}
+
+	var total, average, count float64
+	for _, album := range db.Albums {
+		if strings.ToLower(album.Genre) != strings.ToLower(genreParam) {
+			continue
+		}
+		total += album.Price
+		count++
+	}
+
+	if count == 0 {
+		http.Error(w, "No albums found for the specified genre", http.StatusNotFound)
+		return
+	}
+
+	average = total / count
+
+	w.WriteHeader(http.StatusOK)
+	err := json.NewEncoder(w).Encode(map[string]float64{"average": average})
+	if err != nil {
+		http.Error(w, "Error encoding response", http.StatusInternalServerError)
+		return
+	}
+}
 
 func GetAlbums(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
